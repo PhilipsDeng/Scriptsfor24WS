@@ -1,12 +1,27 @@
 import bpy
 import math
-from tqdm import tqdm
+import os
 
-# 文件路径
-obj_file_path = r"C:\Users\Philips Deng\Desktop\dragon\dragon_stand\dragon.obj"  # 替换为你的 obj 文件路径
-texture_file_path = r"C:\Users\Philips Deng\Desktop\dragon\dragon_stand\red.png"  # 替换为你的贴图文件路径
-output_image_path = r"C:\Users\Philips Deng\Desktop\dragon\dragon_stand\preview.png"  # 预览图像路径
-output_video_path = r"C:\Users\Philips Deng\Desktop\dragon\dragon_stand\output.mp4"  # 最终视频输出路径
+# Blender --background --python render.py
+
+# 从文件中读取路径
+paths_file = r"C:\Users\phili\Documents\Github\Scriptsfor24WS\path.txt"  # 存储路径的文件路径
+
+# 读取路径文件内容
+def read_paths(file_path):
+    paths = {}
+    with open(file_path, 'r') as file:
+        for line in file:
+            key, value = line.strip().split('=')
+            paths[key.strip()] = value.strip()
+    return paths
+
+# 获取路径
+paths = read_paths(paths_file)
+obj_file_path = paths.get('obj_file_path')
+texture_file_path = paths.get('texture_file_path')
+output_image_path = paths.get('output_image_path')
+output_video_path = paths.get('output_video_path')
 
 # 删除默认的立方体
 if "Cube" in bpy.data.objects:
@@ -70,7 +85,7 @@ camera.parent = empty
 # 设置摄像机环绕动画
 bpy.context.scene.frame_start = 1
 bpy.context.scene.frame_end = 250
-for frame in tqdm(range(bpy.context.scene.frame_start, bpy.context.scene.frame_end + 1), desc="设置摄像机环绕动画进度"):
+for frame in range(bpy.context.scene.frame_start, bpy.context.scene.frame_end + 1):
     bpy.context.scene.frame_set(frame)
     angle = frame * (2 * math.pi / bpy.context.scene.frame_end)
     empty.rotation_euler = (0, 0, angle)
@@ -96,8 +111,7 @@ if user_input.lower() == 'yes':
     bpy.context.scene.render.ffmpeg.ffmpeg_preset = 'GOOD'
 
     print("开始渲染动画...")
-    for _ in tqdm(range(bpy.context.scene.frame_start, bpy.context.scene.frame_end + 1), desc="渲染动画进度"):
-        bpy.ops.render.render(animation=True)
+    bpy.ops.render.render(animation=True)
     print("渲染完成！")
 else:
     print("渲染已取消。")
