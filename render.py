@@ -1,8 +1,16 @@
 import bpy
 import math
 import os
+import subprocess
+
+
 
 # Blender --background --python render.py
+
+# Set the rendering device to GPU
+bpy.context.preferences.addons['cycles'].preferences.compute_device_type = 'ONEAPI'
+bpy.context.scene.cycles.device = 'GPU'
+
 
 # 从文件中读取路径
 paths_file = r"C:\Users\phili\Documents\Github\Scriptsfor24WS\path.txt"  # 存储路径的文件路径
@@ -59,21 +67,21 @@ links.new(texture_node.outputs['Color'], bsdf_node.inputs['Base Color'])
 links.new(bsdf_node.outputs['BSDF'], output_node.inputs['Surface'])
 
 # 添加并设置摄像机
-bpy.ops.object.camera_add(location=(5, -5, 3))
+bpy.ops.object.camera_add(location=(5, -5, 3.5))
 camera = bpy.context.object
-camera.rotation_euler = (1.109, 0, 0.785)  # 初始旋转
+camera.rotation_euler = (1.15, 0, 0.785)  # 初始旋转
 
 # 设置场景的相机
 bpy.context.scene.camera = camera
 
 # 添加灯光
-bpy.ops.object.light_add(type='SUN', location=(10, -10, 10))
-sun_light = bpy.context.object
-sun_light.data.energy = 5  # 调整灯光强度
-
 bpy.ops.object.light_add(type='AREA', location=(0, 0, 5))
 point_light = bpy.context.object
-point_light.data.energy = 300  # 增加一个点光源用于更好地照亮龙
+point_light.data.energy = 5000 
+point_light.data.shadow_soft_size = 0.1
+point_light.data.size = 1000
+point_light.location = (0, 0, 5)
+point_light.rotation_euler = (math.radians(0), math.radians(0), math.radians(0))
 
 # 创建一个空物体用于摄像机环绕
 bpy.ops.object.empty_add(type='PLAIN_AXES', location=(0, 0, 0))
@@ -84,7 +92,7 @@ camera.parent = empty
 
 # 设置摄像机环绕动画
 bpy.context.scene.frame_start = 1
-bpy.context.scene.frame_end = 250
+bpy.context.scene.frame_end = 10
 for frame in range(bpy.context.scene.frame_start, bpy.context.scene.frame_end + 1):
     bpy.context.scene.frame_set(frame)
     angle = frame * (2 * math.pi / bpy.context.scene.frame_end)
@@ -95,6 +103,16 @@ for frame in range(bpy.context.scene.frame_start, bpy.context.scene.frame_end + 
 bpy.context.scene.render.filepath = output_image_path  # 设置输出文件路径
 bpy.context.scene.frame_set(1)  # 选择第一帧进行渲染
 bpy.ops.render.render(write_still=True)  # 渲染当前帧并保存
+
+# 渲染完成后自动打开输出的图片
+if os.path.exists(output_image_path):
+    try:
+        if os.name == 'nt':  # Windows
+            os.startfile(output_image_path)
+        elif os.name == 'posix':  # macOS or Linux
+            subprocess.call(['open', output_image_path] if sys.platform == 'darwin' else ['xdg-open', output_image_path])
+    except Exception as e:
+        print(f"打开图片时发生错误：{e}")
 
 print("预览图像已保存。请检查预览图像是否符合要求，再决定是否继续渲染。")
 
