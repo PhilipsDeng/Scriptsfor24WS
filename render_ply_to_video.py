@@ -9,7 +9,7 @@ bpy.ops.object.select_all(action='SELECT')
 bpy.ops.object.delete(use_global=False)
 
 
-base_path = "C:/Users/Philips Deng/Desktop/dragon/jeep car/"
+base_path = "C:/Users/Philips Deng/Desktop/dragonOLO_act17/"
 # C:\Users\Philips Deng\Desktop\dragon\jeep car
 all_files = os.listdir(base_path)
 
@@ -28,7 +28,7 @@ frame_step = 2
 bpy.context.scene.render.engine = 'BLENDER_EEVEE_NEXT'
 
 
-bpy.context.scene.eevee.taa_render_samples = 32  # 设置采样数量
+bpy.context.scene.eevee.taa_render_samples = 16  # 设置采样数量
 bpy.context.scene.eevee.use_gtao = True  # 启用屏幕空间环境光遮蔽
 
 
