@@ -120,7 +120,8 @@ for obj_file in obj_files:
         camera_object = bpy.data.objects.new("Camera", camera_data)
         bpy.context.collection.objects.link(camera_object)
         bpy.context.scene.camera = camera_object
-        camera_object.location = (0, -15, 11)
+        camera_object.location = (0, -15, 9)
+        # camera_object.location = (0, -1.5, 1)
         camera_object.rotation_euler = (math.radians(63), 0, 0) 
         camera_data.lens = 20
 
