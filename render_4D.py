@@ -9,7 +9,7 @@ bpy.ops.object.select_all(action='SELECT')
 bpy.ops.object.delete(use_global=False)
 
 
-base_path = "C:/Users/Philips Deng/Desktop/dragonOLO_act17/"
+base_path = "C:/Users/Philips Deng/Desktop/deerOMG_Jump/"
 
 all_files = os.listdir(base_path)
 
@@ -19,16 +19,15 @@ textures = sorted([f for f in all_files if f.endswith('.png')], key=lambda x: in
 
 # 动画设置
 frame_start = 1
-frame_end = 300
-frame_step = 2  
+frame_end = 600
+frame_step = 6  
 
 
 bpy.context.scene.render.engine = 'BLENDER_EEVEE_NEXT'
 
 
 bpy.context.scene.eevee.taa_render_samples = 16  # 设置采样数量
-bpy.context.scene.eevee.use_gtao = True  # 启用屏幕空间环境光遮蔽
-
+bpy.context.scene.eevee.use_gtao = False  # 启用屏幕空间环境光遮蔽
 
 bpy.context.scene.world.use_nodes = True
 bg = bpy.context.scene.world.node_tree.nodes['Background']
@@ -150,6 +149,27 @@ for cycle in range(num_cycles):
         obj.keyframe_insert(data_path="hide_render", frame=current_frame)
         obj.keyframe_insert(data_path="hide_viewport", frame=current_frame)
     
+
+    for i, obj in enumerate(reversed(loaded_objects)):
+
+        for other_obj in loaded_objects:
+            other_obj.hide_render = True
+            other_obj.hide_viewport = True
+            other_obj.keyframe_insert(data_path="hide_render", frame=current_frame)
+            other_obj.keyframe_insert(data_path="hide_viewport", frame=current_frame)
+        
+
+        obj.hide_render = False
+        obj.hide_viewport = False
+        obj.keyframe_insert(data_path="hide_render", frame=current_frame)
+        obj.keyframe_insert(data_path="hide_viewport", frame=current_frame)
+        
+
+        current_frame += frame_step
+        obj.keyframe_insert(data_path="hide_render", frame=current_frame)
+        obj.keyframe_insert(data_path="hide_viewport", frame=current_frame)
+
+
     if current_frame > frame_end:
         break
 
@@ -162,9 +182,10 @@ camera_data = bpy.data.cameras.new(name="Camera")
 camera_object = bpy.data.objects.new("Camera", camera_data)
 bpy.context.collection.objects.link(camera_object)
 bpy.context.scene.camera = camera_object
-camera_object.location = (0, -15, 11)
+# camera_object.location = (0, -18, 9)
+camera_object.location = (0, -6, 4)
 camera_object.rotation_euler = (math.radians(63), 0, 0) 
-camera_data.lens = 20
+camera_data.lens = 35
 
 
 empty = bpy.data.objects.new("Empty", None)
@@ -173,21 +194,21 @@ camera_object.parent = empty
 
 for frame in range(frame_start, frame_end + 1):
     bpy.context.scene.frame_set(frame)
-    angle = (frame - frame_start) * (2 * math.pi / frame_end)
+    angle = (frame - frame_start) * (2 * math.pi / (frame_end * 10))
     empty.rotation_euler = (0, 0, angle)
     empty.keyframe_insert(data_path="rotation_euler", index=-1)
 
 
-bpy.context.scene.render.filepath = base_path + "animation.mp4"
+bpy.context.scene.render.filepath = base_path + "animation2.mp4"
 bpy.context.scene.render.image_settings.file_format = 'FFMPEG'
 bpy.context.scene.render.ffmpeg.format = 'MPEG4'
 bpy.context.scene.render.ffmpeg.codec = 'H264'
 bpy.context.scene.render.ffmpeg.constant_rate_factor = 'HIGH'
 
 
-bpy.context.scene.render.resolution_x = 1920  
-bpy.context.scene.render.resolution_y = 1080  
-bpy.context.scene.render.fps = 30  
+bpy.context.scene.render.resolution_x = 1080  
+bpy.context.scene.render.resolution_y = 1920  
+bpy.context.scene.render.fps = 60  
 
 
 bpy.ops.render.render(animation=True)
