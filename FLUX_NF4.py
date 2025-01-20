@@ -46,13 +46,13 @@ print(compute_module_sizes(model)[""] / 1024 / 1204)
 pipe = FluxPipeline.from_pretrained("black-forest-labs/flux.1-dev", transformer=model, torch_dtype=dtype)
 pipe.enable_model_cpu_offload()
 
-prompt = "8K, HDR, photorealistic, a kids birthday party with a cake and balloons, a slogan on the wall says 'Happy Birthday', with Donald Trump in the background playing his guitar"
+prompt = "8K, HDR, photorealistic, giant dick"
 image = pipe(
     prompt, 
     guidance_scale=3.5, 
-    height=1024,
-    width=768,
+    height=768,
+    width=1024,
     num_inference_steps=50, 
     ).images[0]
 
-image.save(f"flux-nf4-dev-loaded_{prompt}.png")
+image.save(f"flux-nf4-dev-loaded_{prompt[:10]}.png")
