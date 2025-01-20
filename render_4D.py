@@ -9,13 +9,21 @@ bpy.ops.object.select_all(action='SELECT')
 bpy.ops.object.delete(use_global=False)
 
 
-base_path = "C:/Users/Philips Deng/Desktop/deerOMG_Jump/"
+# blender --background --python render_4D.py
+
+bpy.ops.object.select_all(action='SELECT')
+bpy.ops.object.delete(use_global=False)
+
+
+# base_path = "C:/Users/Philips Deng/Desktop/dragonOLO_act17/"
+base_path = "/home/philipsdeng/文档/GitHub/2OTex/outputs/2025-01-06_18-45-30_vsd_a_fire_dragon,_photo_realistic,_8k,_hd,_3D_seed_1949_n_frames_20_n_particles_1/"
 
 all_files = os.listdir(base_path)
 
 
 obj_files = sorted([f for f in all_files if f.endswith('.obj')], key=lambda x: int(re.search(r'\d+', x).group()))
-textures = sorted([f for f in all_files if f.endswith('.png')], key=lambda x: int(re.search(r'\d+', x).group()))
+# textures = sorted([f for f in all_files if f.endswith('.png')], key=lambda x: int(re.search(r'\d+', x).group()))
+textures = ['frame0.png']
 
 # 动画设置
 frame_start = 1
@@ -33,7 +41,7 @@ bpy.context.scene.world.use_nodes = True
 bg = bpy.context.scene.world.node_tree.nodes['Background']
 bg.inputs['Color'].default_value = (0, 0, 0, 1)  # 设置背景颜色为纯黑色
 
-def create_area_light(name, location, rotation_euler, energy=12000, size=50):
+def create_area_light(name, location, rotation_euler, energy=60000, size=100):
     """
     创建一个AREA光源并将其添加到当前场景中。
 
@@ -183,8 +191,8 @@ camera_object = bpy.data.objects.new("Camera", camera_data)
 bpy.context.collection.objects.link(camera_object)
 bpy.context.scene.camera = camera_object
 # camera_object.location = (0, -18, 9)
-camera_object.location = (0, -6, 4)
-camera_object.rotation_euler = (math.radians(63), 0, 0) 
+camera_object.location = (0, -1, 0.78)
+camera_object.rotation_euler = (math.radians(62), 0, 0) 
 camera_data.lens = 35
 
 
@@ -194,21 +202,24 @@ camera_object.parent = empty
 
 for frame in range(frame_start, frame_end + 1):
     bpy.context.scene.frame_set(frame)
-    angle = (frame - frame_start) * (2 * math.pi / (frame_end * 10))
+    angle = -(frame - frame_start) * (2 * math.pi / (frame_end * 2))
     empty.rotation_euler = (0, 0, angle)
     empty.keyframe_insert(data_path="rotation_euler", index=-1)
 
 
-bpy.context.scene.render.filepath = base_path + "animation2.mp4"
+bpy.context.scene.render.filepath = base_path + "animation.mp4"
 bpy.context.scene.render.image_settings.file_format = 'FFMPEG'
 bpy.context.scene.render.ffmpeg.format = 'MPEG4'
 bpy.context.scene.render.ffmpeg.codec = 'H264'
 bpy.context.scene.render.ffmpeg.constant_rate_factor = 'HIGH'
 
 
-bpy.context.scene.render.resolution_x = 1080  
-bpy.context.scene.render.resolution_y = 1920  
+bpy.context.scene.render.resolution_x = 1920  
+bpy.context.scene.render.resolution_y = 1080  
 bpy.context.scene.render.fps = 60  
 
 
 bpy.ops.render.render(animation=True)
+
+if __name__ == '__main__':
+    pass
