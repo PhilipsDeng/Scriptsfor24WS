@@ -46,7 +46,7 @@ print(compute_module_sizes(model)[""] / 1024 / 1204)
 pipe = FluxPipeline.from_pretrained("black-forest-labs/flux.1-dev", transformer=model, torch_dtype=dtype)
 pipe.enable_model_cpu_offload()
 
-prompt = "8K, HDR, photorealistic, giant dick"
+prompt = "8K, HDR, photorealistic, portrait of a person"
 image = pipe(
     prompt, 
     guidance_scale=3.5, 
