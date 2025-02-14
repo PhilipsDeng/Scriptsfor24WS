@@ -10,7 +10,7 @@ bpy.ops.object.select_all(action='SELECT')
 bpy.ops.object.delete(use_global=False)
 
 base_path = "/home/philipsdeng/文档/GitHub/Scriptsfor24WS"
-obj_path = os.path.join(base_path, "data/dear/")
+obj_path = os.path.join(base_path, "data/dragonOLO_act17/")
 all_files = os.listdir(obj_path)
 obj_files = sorted([f for f in all_files if f.endswith('.obj')], key=lambda x: int(re.search(r'\d+', x).group()))
 
@@ -36,7 +36,7 @@ if os.path.exists(hdr_path):
     env_texture_node.image = bpy.data.images.load(filepath=hdr_path)
 bg_node = nodes.new(type="ShaderNodeBackground")
 bg_node.location = (0, 0)
-bg_node.inputs['Strength'].default_value = 1
+bg_node.inputs['Strength'].default_value = 0.8
 output_node = nodes.new(type="ShaderNodeOutputWorld")
 output_node.location = (200, 0)
 links.new(env_texture_node.outputs['Color'], bg_node.inputs['Color'])
@@ -138,10 +138,18 @@ camera_data = bpy.data.cameras.new(name="Camera")
 camera_object = bpy.data.objects.new("Camera", camera_data)
 bpy.context.collection.objects.link(camera_object)
 bpy.context.scene.camera = camera_object
-camera_object.location = (0, -5, 3)
+
+#-------------------------------------------CAM-DIST--------------------------------------------------------#
+
+# camera_object.location = (0, -5, 3)
 # camera_object.location = (0, -15, 9)
+camera_object.location = (0, -3, 2)
+
+
+#-----------------------------------------------------------------------------------------------------------#
+
 camera_object.rotation_euler = (math.radians(62), 0, 0)
-camera_data.lens = 20
+camera_data.lens = 30
 
 empty = bpy.data.objects.new("Empty", None)
 bpy.context.collection.objects.link(empty)
@@ -149,7 +157,7 @@ camera_object.parent = empty
 
 for frame in range(frame_start, frame_end + 1):
     bpy.context.scene.frame_set(frame)
-    angle = -(frame - frame_start) * (2 * math.pi / (frame_end * 2))
+    angle = -(frame - frame_start) * (2 * math.pi / (frame_end * 5))
     empty.rotation_euler = (0, 0, angle)
     empty.keyframe_insert(data_path="rotation_euler", index=-1)
 

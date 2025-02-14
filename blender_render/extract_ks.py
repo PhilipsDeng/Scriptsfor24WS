@@ -26,4 +26,4 @@ def extract_channels(base_path):
     print("Extraction finished: texture_metallic.png & texture_roughness.png")
 
 if __name__ == "__main__":
-    extract_channels("/home/philipsdeng/文档/GitHub/Scriptsfor24WS/data/dragon_obj/")
+    extract_channels("/home/philipsdeng/文档/GitHub/Scriptsfor24WS/data/dragonOLO_act17/")
