@@ -30,7 +30,7 @@ pipe = FluxControlPipeline.from_pretrained(bfl_repo, transformer=None, text_enco
 pipe.transformer = transformer.to(device)
 pipe.text_encoder_2 = text_encoder_2.to(device)
 
-# pipe.enable_model_cpu_offload()
+pipe.enable_model_cpu_offload()
 
 prompt = "A cat holding a sign that says hello world"
 control_image = load_image("/root/autodl-tmp/Github/Scriptsfor24WS/data/depth_img/00009.png")
