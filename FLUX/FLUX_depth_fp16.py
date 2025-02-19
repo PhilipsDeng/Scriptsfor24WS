@@ -6,7 +6,7 @@ import os
 
 cache_path = "/root/autodl-tmp/.cache/huggingface/hub"
 os.makedirs(cache_path, exist_ok=True)
-pipe = FluxControlPipeline.from_pretrained("black-forest-labs/FLUX.1-Depth-dev", torch_dtype=torch.float8_e4m3fn, cache_dir=cache_path).to("cuda")
+pipe = FluxControlPipeline.from_pretrained("black-forest-labs/FLUX.1-Depth-dev", torch_dtype=torch.float16, cache_dir=cache_path).to("cuda")
 
 
 prompt = "one dragon from lord of the rings"

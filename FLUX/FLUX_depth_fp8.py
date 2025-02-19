@@ -33,8 +33,7 @@ pipe.text_encoder_2 = text_encoder_2.to(device)
 # pipe.enable_model_cpu_offload()
 
 prompt = "A cat holding a sign that says hello world"
-prompt = prompt.to(device)
-control_image = load_image("/root/autodl-tmp/Github/Scriptsfor24WS/data/depth_img/00009.png").to(device)
+control_image = load_image("/root/autodl-tmp/Github/Scriptsfor24WS/data/depth_img/00009.png")
 
 print("diffusing...")
 image = pipe(
@@ -47,4 +46,4 @@ image = pipe(
     generator=torch.Generator().manual_seed(328),
 ).images[0]
 
-image.save("Github/Scriptsfor24WS/data/outputs/FLUX_depth_fp16.png")
+image.save("/root/autodl-tmp/Github/Scriptsfor24WS/data/outputs/FLUX_depth_fp16.png")
