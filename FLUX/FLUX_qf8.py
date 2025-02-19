@@ -2,19 +2,22 @@ import torch
 from diffusers import FluxTransformer2DModel, FluxPipeline
 from transformers import T5EncoderModel, CLIPTextModel
 from optimum.quanto import freeze, qfloat8, quantize
+import os
 
+cache_path = "/root/autodl-tmp/.cache/huggingface/hub"
+os.makedirs(cache_path, exist_ok=True)
 bfl_repo = "black-forest-labs/FLUX.1-dev"
 dtype = torch.bfloat16
 
-transformer = FluxTransformer2DModel.from_single_file("https://huggingface.co/Kijai/flux-fp8/blob/main/flux1-dev-fp8.safetensors", torch_dtype=dtype)
+transformer = FluxTransformer2DModel.from_single_file("https://huggingface.co/Kijai/flux-fp8/blob/main/flux1-dev-fp8.safetensors", torch_dtype=dtype, cache_dir = cache_path)
 quantize(transformer, weights=qfloat8)
 freeze(transformer)
 
-text_encoder_2 = T5EncoderModel.from_pretrained(bfl_repo, subfolder="text_encoder_2", torch_dtype=dtype)
+text_encoder_2 = T5EncoderModel.from_pretrained(bfl_repo, subfolder="text_encoder_2", torch_dtype=dtype, cache_dir = cache_path)
 quantize(text_encoder_2, weights=qfloat8)
 freeze(text_encoder_2)
 
-pipe = FluxPipeline.from_pretrained(bfl_repo, transformer=None, text_encoder_2=None, torch_dtype=dtype)
+pipe = FluxPipeline.from_pretrained(bfl_repo, transformer=None, text_encoder_2=None, torch_dtype=dtype, cache_dir = cache_path)
 pipe.transformer = transformer
 pipe.text_encoder_2 = text_encoder_2
 
