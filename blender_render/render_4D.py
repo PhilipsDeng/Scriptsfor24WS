@@ -3,6 +3,8 @@ import os
 import re
 import math
 # "C:\Program Files (x86)\Steam\steamapps\common\Blender\blender.exe" --background --python "C:\Users\Philips Deng\Documents\GitHub\Scriptsfor24WS\render_4D.py"
+# blender --background --python /root/autodl-tmp/Github/Scriptsfor24WS/blender_render/render_4D.py
+
 
 
 bpy.ops.object.select_all(action='SELECT')
@@ -16,14 +18,14 @@ bpy.ops.object.delete(use_global=False)
 
 
 # base_path = "C:/Users/Philips Deng/Desktop/dragonOLO_act17/"
-base_path = "/home/philipsdeng/文档/GitHub/2OTex/outputs/2025-01-06_18-45-30_vsd_a_fire_dragon,_photo_realistic,_8k,_hd,_3D_seed_1949_n_frames_20_n_particles_1/"
+base_path = "/root/autodl-tmp/Github/Scriptsfor24WS/data/deer_singleUV/"
 
 all_files = os.listdir(base_path)
 
 
 obj_files = sorted([f for f in all_files if f.endswith('.obj')], key=lambda x: int(re.search(r'\d+', x).group()))
 # textures = sorted([f for f in all_files if f.endswith('.png')], key=lambda x: int(re.search(r'\d+', x).group()))
-textures = ['frame0.png']
+textures = ['texture.png']
 
 # 动画设置
 frame_start = 1
@@ -34,7 +36,7 @@ frame_step = 6
 bpy.context.scene.render.engine = 'BLENDER_EEVEE_NEXT'
 
 
-bpy.context.scene.eevee.taa_render_samples = 16  # 设置采样数量
+bpy.context.scene.eevee.taa_render_samples = 32  # 设置采样数量
 bpy.context.scene.eevee.use_gtao = False  # 启用屏幕空间环境光遮蔽
 
 bpy.context.scene.world.use_nodes = True

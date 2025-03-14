@@ -25,15 +25,15 @@ quantize(text_encoder_2, weights=qfloat8)
 freeze(text_encoder_2)
 
 print("loading pipe")
-pipe = FluxControlPipeline.from_pretrained(bfl_repo, transformer=transformer, text_encoder_2=text_encoder_2, torch_dtype=dtype, cache_dir=cache_path, local_files_only = True).to(device)
+pipe = FluxControlPipeline.from_pretrained(bfl_repo, transformer=None, text_encoder_2=None, torch_dtype=dtype, cache_dir=cache_path, local_files_only = True).to(device)
 
-# pipe.transformer = transformer.to(device)
-# pipe.text_encoder_2 = text_encoder_2.to(device)
+pipe.transformer = transformer.to(device)
+pipe.text_encoder_2 = text_encoder_2.to(device)
 
 # pipe.enable_model_cpu_offload()
 
-prompt = "A dragon"
-control_image = load_image("/root/autodl-tmp/Github/Scriptsfor24WS/data/depth_map_bpy.png")
+prompt = "A dragon in lord of the rings"
+control_image = load_image("/root/autodl-tmp/Github/Scriptsfor24WS/data/depth_img/00009.png")
 
 print("diffusing...")
 image = pipe(
@@ -41,9 +41,9 @@ image = pipe(
     control_image=control_image,
     height=1024,
     width=1024,
-    num_inference_steps=1,
+    num_inference_steps=20,
     guidance_scale=7,
-    generator=torch.Generator().manual_seed(1949),
+    generator=torch.Generator().manual_seed(42),
 ).images[0]
 
 image.save("/root/autodl-tmp/Github/Scriptsfor24WS/data/outputs/FLUX_depth_fp8.png")

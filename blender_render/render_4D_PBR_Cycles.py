@@ -3,7 +3,7 @@ import os
 import re
 import math
 '''
-blender --background --python /root/Scriptsfor24WS/blender_render/render_4D_PBR_Cycles.py
+blender --background --python /root/autodl-tmp/Github/Scriptsfor24WS/blender_render/render_4D_PBR_Cycles.py
 blender --background --python /home/philipsdeng/文档/GitHub/Scriptsfor24WS/blender_render/render_4D_PBR_Cycles.py
 '''
 
@@ -11,7 +11,7 @@ blender --background --python /home/philipsdeng/文档/GitHub/Scriptsfor24WS/ble
 bpy.ops.object.select_all(action='SELECT')
 bpy.ops.object.delete(use_global=False)
 
-base_path = "/home/philipsdeng/文档/GitHub/Scriptsfor24WS"
+base_path = "/root/autodl-tmp/Github/Scriptsfor24WS"
 obj_path = os.path.join(base_path, "data/dear/")
 all_files = os.listdir(obj_path)
 obj_files = sorted([f for f in all_files if f.endswith('.obj')], key=lambda x: int(re.search(r'\d+', x).group()))
@@ -22,10 +22,9 @@ frame_step = 2
 
 # 将渲染引擎设置为 Cycles，并设置相关参数
 bpy.context.scene.render.engine = 'CYCLES'
-# 如果你的电脑有支持 GPU 的显卡，可以启用 GPU 渲染，效果更快更好
-# 注意：这里需要提前在 Blender 的用户偏好设置中启用 GPU 支持
-# bpy.context.preferences.addons['cycles'].preferences.compute_device_type = 'CUDA'  # 或 'OPTIX', 'HIP', 'METAL'
-# bpy.context.scene.cycles.device = 'GPU'
+
+bpy.context.preferences.addons['cycles'].preferences.compute_device_type = 'CUDA'  # 或 'OPTIX', 'HIP', 'METAL'
+bpy.context.scene.cycles.device = 'GPU'
 bpy.context.scene.cycles.samples = 128  # 可根据需要调整采样数
 
 # 设置世界环境（背景）节点
@@ -161,7 +160,7 @@ bpy.context.scene.camera = camera_object
 camera_object.location = (0, -5, 3)
 # camera_object.location = (0, -15, 9)
 camera_object.rotation_euler = (math.radians(62), 0, 0)
-camera_data.lens = 20
+camera_data.lens = 35
 
 # 创建空物体作为摄像机的父物体，实现围绕旋转的动画效果
 empty = bpy.data.objects.new("Empty", None)
@@ -181,8 +180,8 @@ bpy.context.scene.render.image_settings.file_format = 'FFMPEG'
 bpy.context.scene.render.ffmpeg.format = 'MPEG4'
 bpy.context.scene.render.ffmpeg.codec = 'H264'
 bpy.context.scene.render.ffmpeg.constant_rate_factor = 'HIGH'
-bpy.context.scene.render.resolution_x = 1920
-bpy.context.scene.render.resolution_y = 1080
+bpy.context.scene.render.resolution_x = 3840
+bpy.context.scene.render.resolution_y = 2160
 bpy.context.scene.render.fps = 30
 
 bpy.ops.render.render(animation=True)
