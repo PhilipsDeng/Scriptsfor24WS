@@ -19,7 +19,7 @@ frame_end = 300
 frame_step = 2
 
 bpy.context.scene.render.engine = 'BLENDER_EEVEE_NEXT'
-bpy.context.scene.eevee.taa_render_samples = 16
+bpy.context.scene.eevee.taa_render_samples = 128
 bpy.context.scene.eevee.use_gtao = False
 
 bpy.context.scene.world.use_nodes = True
